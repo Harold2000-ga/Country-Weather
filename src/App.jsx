@@ -6,6 +6,7 @@ import { BiSearch } from 'react-icons/bi'
 function App() {
   const [countries, setCountries] = useState()
   const [list, setList] = useState([])
+  const [input, setInput] = useState('')
 
   useEffect(() => {
     const url = 'https://restcountries.com/v3.1/all'
@@ -23,8 +24,8 @@ function App() {
   }, [])
 
   const getCountry = e => {
-    const match = e.target.value.toLowerCase()
-    const newCountries = countries.filter(ele => ele.name.common.toLowerCase().includes(match))
+    setInput(e.target.value.toLowerCase())
+    const newCountries = countries.filter(ele => ele.name.common.toLowerCase().includes(input))
 
     setList(newCountries)
   }
@@ -48,12 +49,11 @@ function App() {
           <BiSearch size={25} color='white' />
         </div>
 
-        {list?.length > 5 ? (
-          <p className=' text-white text-center tracking-wider opacity-80'>
-            To many matches be more specific
+        {input === '' ? null : list?.length > 5 ? (
+          <p className='text-white text-center tracking-wider opacity-80'>
+            Too many matches, please be more specific.
           </p>
         ) : (
-          list?.length > 1 &&
           list?.map((item, index) => (
             <p
               onClick={() => showCountry(index)}
@@ -63,6 +63,11 @@ function App() {
               {item.name.common}
             </p>
           ))
+        )}
+        {input !== '' && list.length === 0 && (
+          <p className='text-white text-center tracking-wider opacity-80'>
+            The country was not found.
+          </p>
         )}
         {list?.length == 1 && (
           <div className='flex flex-col justify-between h-5/6'>
